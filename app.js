@@ -245,8 +245,8 @@ async function evaluateSubmission() {
         <p style="margin-top: 6px; color: #8b949e;">${result.feedback}</p>
       `;
 
-      nextBtn.classList.remove('hidden');
-      updateUI();
+         nextBtn.classList.remove('hidden');
+   updateUI();
     } else {
       playTone('fail');
       state.streak = 0;
