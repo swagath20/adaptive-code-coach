@@ -161,6 +161,7 @@ async function fetchProblem() {
       })
     });
 
+    if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
     const data = await res.json();
     state.currentProblem = data;
     saveState();
@@ -205,6 +206,7 @@ async function evaluateSubmission() {
       })
     });
 
+    if (!res.ok) throw new Error(`Server returned HTTP ${res.status} (${res.statusText})`);
     const result = await res.json();
 
     if (result.correct) {
@@ -281,12 +283,10 @@ toggleHintBtn.addEventListener('click', () => {
 revealSolutionBtn.addEventListener('click', async () => {
   if (!state.currentProblem) return;
 
-  // Streak penalty for giving up
   state.streak = 0;
   saveState();
   updateUI();
 
-  // If a valid reference solution is already cached, display and enable button immediately
   if (
     state.currentProblem.solution && 
     state.currentProblem.solution.trim() !== '' && 
@@ -298,7 +298,6 @@ revealSolutionBtn.addEventListener('click', async () => {
     return;
   }
 
-  // Fetch dynamically if missing
   solutionCodeBlock.textContent = "// Synthesizing reference solution...";
   solutionModal.classList.remove('hidden');
   applySolutionBtn.disabled = true;
@@ -314,6 +313,7 @@ revealSolutionBtn.addEventListener('click', async () => {
       })
     });
 
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     if (data.solution && data.solution.trim() !== '') {
       state.currentProblem.solution = data.solution;
@@ -379,6 +379,7 @@ langSelect.addEventListener('change', async (e) => {
       })
     });
 
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     state.currentProblem.starter_code = data.starter_code;
     state.currentProblem.solution = data.solution;

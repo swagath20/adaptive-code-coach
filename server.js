@@ -161,4 +161,4 @@ Output ONLY valid JSON with this exact structure:
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Teacher Server running at http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Teacher Server running at http://localhost:${PORT}`));
