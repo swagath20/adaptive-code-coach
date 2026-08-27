@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adaptive Code Coach</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="navbar">
+    <div class="nav-brand">
+      <span class="brand-badge">SYSTEM</span>
+      <span class="brand-title">Adaptive Code Coach</span>
+    </div>
+    <div class="nav-controls">
+      <div class="user-select-wrapper">
+        <span class="user-icon">USR:</span>
+        <select id="user-select" class="select-dropdown">
+          <option value="user_guest">Guest Dev</option>
+          <option value="user_alice">Profile: Alice</option>
+          <option value="user_bob">Profile: Bob</option>
+        </select>
+      </div>
+
+      <div class="metric-group">
+        <div class="metric-item">
+          <span class="metric-label">STAGE</span>
+          <span class="metric-value" id="level-badge">1</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-label">STREAK</span>
+          <span class="metric-value" id="streak-badge">0</span>
+        </div>
+      </div>
+
+      <select id="lang-select" class="select-dropdown">
+        <option value="JavaScript">JavaScript</option>
+        <option value="Python">Python</option>
+        <option value="C++">C++</option>
+      </select>
+      <button id="reset-btn" class="btn btn-subtle">Reset</button>
+    </div>
+  </header>
+
+  <!-- Split Workspace -->
+  <main class="workspace">
+    <!-- Left Column: Specs, Hints & Radar Stats -->
+    <section class="pane left-pane">
+      <div class="panel-card header-card">
+        <div class="badge-row">
+          <span class="skill-badge" id="skill-tag">LOOPS</span>
+          <span class="difficulty-badge" id="diff-tag">LEVEL 1</span>
+        </div>
+        <h1 id="problem-title" class="problem-title">Loading Challenge...</h1>
+      </div>
+      
+      <div class="panel-card desc-card">
+        <div class="card-subtitle">SPECIFICATION</div>
+        <div id="problem-desc" class="problem-desc">Synthesizing environment...</div>
+      </div>
+
+      <!-- Adaptive Hint Card -->
+      <div class="panel-card hint-card">
+        <div class="hint-header">
+          <span class="card-subtitle">AI HINT & GUIDANCE</span>
+          <button id="toggle-hint-btn" class="btn-hint-toggle">Reveal Hint</button>
+        </div>
+        <div id="problem-hint" class="hint-body blur">
+          Hint will be available once the problem loads.
+        </div>
+      </div>
+
+      <!-- Live RPG Radar Stats -->
+      <div class="panel-card stats-card">
+        <div class="card-subtitle">DIAGNOSTIC PROFICIENCY PROFILE</div>
+        <div class="chart-container">
+          <canvas id="skillRadarChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Column: Code Editor & Terminal Output -->
+    <section class="pane right-pane">
+      <div class="editor-wrapper">
+        <div class="editor-header">
+          <div class="tab active-tab">
+            <span class="tab-indicator"></span>
+            <span>solution<span id="file-ext">.js</span></span>
+          </div>
+          <div class="action-buttons">
+            <button id="reveal-solution-btn" class="btn btn-subtle">Give Up & Reveal</button>
+            <button id="next-btn" class="btn btn-secondary hidden">Next Challenge &rarr;</button>
+            <button id="run-btn" class="btn btn-primary">Execute & Evaluate</button>
+          </div>
+        </div>
+
+        <div class="code-area">
+          <textarea id="code-editor" spellcheck="false" placeholder="// Insert solution..."></textarea>
+        </div>
+      </div>
+
+      <!-- Diagnostics Console -->
+      <div class="terminal-wrapper" id="terminal">
+        <div class="terminal-bar">
+          <span class="console-title">DIAGNOSTIC RUNTIME CONSOLE</span>
+          <span id="eval-status" class="status-indicator">STANDBY</span>
+        </div>
+        <div class="terminal-content" id="term-output">
+          <p class="console-idle">Awaiting execution payload...</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Reference Solution Modal -->
+  <div id="solution-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="modal-title">REFERENCE IMPLEMENTATION</span>
+        <button id="close-modal-btn" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-warning">
+        Viewing the reference solution resets your active streak to 0.
+      </div>
+      <pre class="modal-code"><code id="solution-code-block">// Solution loading...</code></pre>
+      <div class="modal-footer">
+        <button id="apply-solution-btn" class="btn btn-secondary">Load into Editor</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
