@@ -185,6 +185,7 @@ async function fetchProblem() {
 }
 
 // Evaluate Code Submission
+// Evaluate Code Submission with Auto-Retry
 async function evaluateSubmission() {
   const userCode = codeEditor.value.trim();
   if (!userCode) return;
@@ -194,19 +195,40 @@ async function evaluateSubmission() {
   evalStatus.className = "status-indicator";
   termOutput.innerHTML = `<p class="console-idle">Evaluating logical execution paths...</p>`;
 
-  try {
-    const res = await fetch('/api/evaluate-submission', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        language: state.language,
-        problem: state.currentProblem.description,
-        code: userCode,
-        skill: state.currentSkill
-      })
-    });
+  const maxRetries = 2;
+  let attempt = 0;
+  let res = null;
 
-    if (!res.ok) throw new Error(`Server returned HTTP ${res.status} (${res.statusText})`);
+  while (attempt <= maxRetries) {
+    try {
+      res = await fetch('/api/evaluate-submission', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          language: state.language,
+          problem: state.currentProblem.description,
+          code: userCode,
+          skill: state.currentSkill
+        })
+      });
+
+      if (res.ok) break; // Request succeeded
+    } catch (err) {
+      // Network drop, will retry
+    }
+
+    attempt++;
+    if (attempt <= maxRetries) {
+      termOutput.innerHTML = `<p class="console-idle">Connecting to runtime instance (retry ${attempt}/${maxRetries})...</p>`;
+      await new Promise((resolve) => setTimeout(resolve, 1500)); // Wait 1.5s before retry
+    }
+  }
+
+  try {
+    if (!res || !res.ok) {
+      throw new Error(`Server busy (HTTP ${res ? res.status : 'timeout'}). Please click evaluate again.`);
+    }
+
     const result = await res.json();
 
     if (result.correct) {
@@ -240,7 +262,7 @@ async function evaluateSubmission() {
     }
   } catch (err) {
     evalStatus.textContent = "ERROR";
-    termOutput.innerHTML = `<p class="console-fail">Runtime inspection failed: ${err.message}</p>`;
+    termOutput.innerHTML = `<p class="console-fail">${err.message}</p>`;
   } finally {
     runBtn.disabled = false;
   }
