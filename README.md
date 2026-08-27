@@ -2,6 +2,14 @@
 
 A coding practice tool that behaves less like an auto-grader and more like a mentor sitting next to you. Instead of a flat "Wrong Answer" when a test case fails, it reads your actual code, figures out the specific reasoning mistake behind the bug, and reshapes what you practice next based on where you're actually struggling.
 
+### 🚀 Live Demo
+
+**[👉 Try Adaptive Code Coach Live](https://adaptive-code-coach.onrender.com/)**
+
+> **Note on Free Tier:** If the instance is dormant, please allow ~15–30 seconds for the initial server spin-up.
+
+
+
 ## Why I built this
 
 Every coding practice site I've used follows the same loop: solve a problem, get a pass/fail, move to the next problem picked more or less at random. If you fail because of an off-by-one error, nothing about the next problem accounts for that. You just keep hitting the same wall in slightly different disguises until it clicks on its own, or it doesn't.
